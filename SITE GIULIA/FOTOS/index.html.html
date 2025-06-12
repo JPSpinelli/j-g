@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João & Giulia - Nosso Amor</title>
+    <style>
+        :root {
+            --primary-color: #6a1b9a;
+            --secondary-color: #ad1457;
+            --dark-purple: #4a148c;
+            --light-pink: #ffe6f0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(to bottom right, var(--light-pink), #fff);
+            text-align: center;
+            color: var(--primary-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .names {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin: 1rem 0;
+            color: var(--secondary-color);
+            font-weight: 700;
+            order: 1;
+        }
+        
+        .header {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 600;
+            order: 2;
+        }
+        
+        .counter {
+            font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+            margin: 1.5rem 0;
+            order: 3;
+        }
+        
+        .slideshow-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            order: 4;
+            flex-grow: 1;
+        }
+        
+        .slide {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        .slide.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .footer {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            margin: 2rem 0 1rem;
+            color: var(--dark-purple);
+            order: 5;
+            line-height: 1.5;
+        }
+        
+        .jg-tag {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+            opacity: 0.3;
+            z-index: 10;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            .slide {
+                max-height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="names">João Spinelli & Giulia Carraca</h1>
+    <h2 class="header">Estamos juntos há...</h2>
+    <div id="counter" class="counter"></div>
+
+    <div class="slideshow-container">
+        <!-- Todas as suas imagens aqui (exemplo com 2 imagens) -->
+        <img class="slide" loading="lazy" src="IMG-20250511-WA0082.jpg" alt="João e Giulia">
+        <img class="slide" loading="lazy" src="IMG-20250518-WA0025.jpg" alt="João e Giulia">
+        <!-- Adicione todas as outras imagens seguindo o mesmo padrão -->
+    </div>
+
+    <p class="footer">Desde 30 de agosto de 2024 sou mais feliz porque tenho você do meu lado. Te amo muito!</p>
+    <div class="jg-tag">J+G</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Slideshow
+            const slides = document.querySelectorAll('.slide');
+            let currentIndex = 0;
+            let slideInterval;
+            
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                slides[index].classList.add('active');
+            }
+            
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }
+            
+            function startSlideshow() {
+                showSlide(0);
+                slideInterval = setInterval(nextSlide, 4000);
+            }
+            
+            // Contador
+            const startDate = new Date('2024-08-30T21:00:00');
+            const counterElement = document.getElementById('counter');
+            
+            function updateCounter() {
+                const now = new Date();
+                const diff = now - startDate;
+                
+                const totalSeconds = Math.floor(diff / 1000);
+                const seconds = totalSeconds % 60;
+                const totalMinutes = Math.floor(totalSeconds / 60);
+                const minutes = totalMinutes % 60;
+                const totalHours = Math.floor(totalMinutes / 60);
+                const hours = totalHours % 24;
+                const totalDays = Math.floor(totalHours / 24);
+                const days = totalDays % 30;
+                const months = Math.floor(totalDays / 30.4375);
+                
+                counterElement.textContent = 
+                    `${months} meses, ${days} dias, ${hours} horas, ${minutes} minutos e ${seconds} segundos`;
+            }
+            
+            // Iniciar
+            startSlideshow();
+            updateCounter();
+            setInterval(updateCounter, 1000);
+            
+            // Otimização de performance
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(slideInterval);
+                } else {
+                    startSlideshow();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
